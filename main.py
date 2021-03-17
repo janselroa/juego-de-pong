@@ -76,4 +76,4 @@ while True:
     if pelota.colliderect(jugador1) or pelota.colliderect(jugador2):
     	velocidad_p_x*=-1
     pygame.display.flip()
-    clock.tick(250)
+    clock.tick(80)

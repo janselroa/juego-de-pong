@@ -1,4 +1,4 @@
-#### un jeugo de pong con python
+#### un juego de pong con python
 
 | Paquete | Descripción | Uso | Más información |
 |---------|-------------|-----|-----------------|

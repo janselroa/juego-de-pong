@@ -9,8 +9,9 @@ BLACK = (0, 0, 0)
 
 ventana = pygame.display.set_mode((800, 500))
 pygame.display.set_caption('Juego de pong')
+icono= pygame.image.load('img/icono.png')
+pygame.display.set_icon(icono)
 clock = pygame.time.Clock()
-
 
 ancho_jugadores = 20
 altura_jugadores = 130

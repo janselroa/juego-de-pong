@@ -12,6 +12,10 @@ pygame.display.set_caption('Juego de pong')
 icono= pygame.image.load('img/icono.png')
 pygame.display.set_icon(icono)
 clock = pygame.time.Clock()
+fuente=pygame.font.Font(None, 35)
+
+puntaje_j1=0
+puntaje_j2=0
 
 ancho_jugadores = 20
 altura_jugadores = 130
@@ -60,12 +64,20 @@ while True:
     cord_pelota_x += velocidad_p_x
     cord_pelota_y += velocidad_p_y
     # dando limites a los jugadores
+    if cordenadas_y_j1<0 or cordenadas_y_j1> 450:
+        velocidad_j1 *=-1
     if cord_pelota_y>490 or cord_pelota_y<10:
     	velocidad_p_y*=-1
 
-    if cord_pelota_x < 0 or cord_pelota_x > 800:
+    if cord_pelota_x > 800:
+        puntaje_j1+=1
+        cord_pelota_x = 400
+        cord_pelota_y = 250 
+
+    if cord_pelota_x < 0 :
         cord_pelota_x = 400
         cord_pelota_y = 250
+        puntaje_j2+=1
 
     ventana.fill(BLACK)
     jugador1 = pygame.draw.rect(
@@ -76,5 +88,9 @@ while True:
         ventana, WHITE, (cord_pelota_x, cord_pelota_y), 10)
     if pelota.colliderect(jugador1) or pelota.colliderect(jugador2):
     	velocidad_p_x*=-1
+    texto_puntaje_j2=fuente.render(f'JugadorB:{puntaje_j2}', 0,  WHITE)
+    texto_puntaje_j1=fuente.render(f'jugadorA:{puntaje_j1}', 0, WHITE)
+    ventana.blit(texto_puntaje_j1,(4, 2))
+    ventana.blit(texto_puntaje_j2,(600, 0))
     pygame.display.flip()
     clock.tick(80)

@@ -1,7 +1,7 @@
-#### un jeugo de pong con python
+#### un juego de pong con python
 
-| Paquete | Descripción | Uso | Más información |
-|---------|-------------|-----|-----------------|
+| Paquete | Descripción |
+|---------|-------------|
 | Pygame | **Pygame** Pygame es un conjunto de módulos de Python diseñados para escribir videojuegos  Puedes leer más sobre pygame [aquí](https://pygame.org) | 
 
 ### Descarga

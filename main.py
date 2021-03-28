@@ -92,5 +92,6 @@ while True:
     texto_puntaje_j1=fuente.render(f'jugadorA:{puntaje_j1}', 0, WHITE)
     ventana.blit(texto_puntaje_j1,(4, 2))
     ventana.blit(texto_puntaje_j2,(600, 0))
+    pygame.draw.line(ventana, WHITE, (400, 10),(400, 500), width=2)
     pygame.display.flip()
     clock.tick(80)

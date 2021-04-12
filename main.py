@@ -1,37 +1,40 @@
 import pygame
 import sys
+from objects import *
 
 pygame.init()
 
+# CONSTANTES
+FONDO=pygame.image.load('img/background.png')
+CLOCK=pygame.time.Clock()
+WIDTH, HEIGHT=800, 600
+SIDE=(WIDTH, HEIGHT)
+FONT=pygame.font.Font(None, 35)
 # colores
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
+BLACK=(0,0,0)
+WHITE=(244,244, 244)
 
-ventana = pygame.display.set_mode((800, 500))
-pygame.display.set_caption('Juego de pong')
-icono= pygame.image.load('img/icono.png')
-pygame.display.set_icon(icono)
-clock = pygame.time.Clock()
-fuente=pygame.font.Font(None, 35)
+windows=pygame.display.set_mode(SIDE)
+pygame.display.set_caption('Pong')
 
-puntaje_j1=0
-puntaje_j2=0
+sprites_list=pygame.sprite.Group()
 
-ancho_jugadores = 20
-altura_jugadores = 130
+# players
+player1=Player()
+player1.rect.y=300
+player1.rect.x=20
+sprites_list.add(player1)
 
-cordenadas_x_j1 = 20
-cordenadas_y_j1 = 200
-velocidad_j1 = 0
+player2=Player()
+player2.rect.y=300
+player2.rect.x=750
+sprites_list.add(player2)
 
-cordenadas_x_j2 = 750
-cordenadas_y_j2 = 200
-velocidad_j2 = 0
-
-cord_pelota_x = 400
-cord_pelota_y = 250
-velocidad_p_y =1
-velocidad_p_x = 3
+# pelota
+pelota=Pelota()
+pelota.rect.x=400
+pelota.rect.y=300
+sprites_list.add(pelota)
 
 while True:
     for event in pygame.event.get():
@@ -39,59 +42,40 @@ while True:
             sys.exit()
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_w:
-                velocidad_j1 = -3
-            if event.key == pygame.K_s:
-                velocidad_j1 = 3
-
-            if event.key == pygame.K_DOWN:
-                velocidad_j2 = 3
-            if event.key == pygame.K_UP:
-                velocidad_j2 = -3
+        	if event.key == pygame.K_w:
+        		player1.changespeed(-3)
+        	if event.key == pygame.K_s:
+        		player1.changespeed(3)
+        	if event.key == pygame.K_UP:
+        		player2.changespeed(-3)
+        	if event.key == pygame.K_DOWN:
+        		player2.changespeed(3)
+        
         if event.type == pygame.KEYUP:
-            if event.key == pygame.K_w:
-                velocidad_j1 = 0
-            if event.key == pygame.K_s:
-                velocidad_j1 = 0
+        	if event.key == pygame.K_w:
+        		player1.changespeed(0)
+        	if event.key == pygame.K_s:
+        		player1.changespeed(0)
+       		
+       		if event.key == pygame.K_UP:
+        		player2.changespeed(0)
+        	if event.key == pygame.K_DOWN:
+        		player2.changespeed(0)
 
-            if event.key == pygame.K_DOWN:
-                velocidad_j2 = 0
-            if event.key == pygame.K_UP:
-                velocidad_j2 = 0
-
-    cordenadas_y_j2 += velocidad_j2
-    cordenadas_y_j1 += velocidad_j1
-    cord_pelota_x += velocidad_p_x
-    cord_pelota_y += velocidad_p_y
-    # dando limites a los jugadores
-    if cordenadas_y_j1<0 or cordenadas_y_j1> 450:
-        velocidad_j1 *=-1
-    if cord_pelota_y>490 or cord_pelota_y<10:
-    	velocidad_p_y*=-1
-
-    if cord_pelota_x > 800:
-        puntaje_j1+=1
-        cord_pelota_x = 400
-        cord_pelota_y = 250 
-
-    if cord_pelota_x < 0 :
-        cord_pelota_x = 400
-        cord_pelota_y = 250
-        puntaje_j2+=1
-
-    ventana.fill(BLACK)
-    jugador1 = pygame.draw.rect(
-        ventana, WHITE, (cordenadas_x_j1, cordenadas_y_j1, ancho_jugadores, altura_jugadores))
-    jugador2 = pygame.draw.rect(
-        ventana, WHITE, (cordenadas_x_j2, cordenadas_y_j2, ancho_jugadores, altura_jugadores))
-    pelota = pygame.draw.circle(
-        ventana, WHITE, (cord_pelota_x, cord_pelota_y), 10)
-    if pelota.colliderect(jugador1) or pelota.colliderect(jugador2):
-    	velocidad_p_x*=-1
-    texto_puntaje_j2=fuente.render(f'JugadorB:{puntaje_j2}', 0,  WHITE)
-    texto_puntaje_j1=fuente.render(f'jugadorA:{puntaje_j1}', 0, WHITE)
-    ventana.blit(texto_puntaje_j1,(4, 2))
-    ventana.blit(texto_puntaje_j2,(600, 0))
-    pygame.draw.line(ventana, WHITE, (400, 10),(400, 500), width=2)
+    # detectando colisiones
+    if pygame.sprite.collide_rect(pelota, player1) or  pygame.sprite.collide_rect(pelota, player2):
+    	pelota.velocidad_x*=-1
+    	pelota.velocidad_y*=-1
+    if pelota.rect.x <3:
+    	player2.score+=1
+    if pelota.rect.x >798:
+    	player1.score+=1
+    windows.blit(FONDO, (0, 0))
+    text_puntaje_p1=FONT.render(f'{player1.score}', 35,WHITE)
+    text_puntaje_p2=FONT.render(f'{player2.score}', 35,WHITE)
+    windows.blit(text_puntaje_p1,(30, 20))
+    windows.blit(text_puntaje_p2,(700, 20))
+    sprites_list.draw(windows)
+    sprites_list.update()
     pygame.display.flip()
-    clock.tick(80)
+    CLOCK.tick(120)
